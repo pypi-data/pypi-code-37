@@ -1,0 +1,11 @@
+import numpy as np
+
+TYPE_BOOL = 'BOOLEAN'
+TYPE_DATE = 'DATE'
+TYPE_EMPTY = 'EMPTY'
+TYPE_GEO = 'GEOMETRY'
+TYPE_NUM = 'NUMERIC'
+TYPE_STR = 'STRING'
+TYPE_UNSUPPORTED = 'UNSUPPORTED'
+
+NULLS = [None, np.nan, 'null', '']
