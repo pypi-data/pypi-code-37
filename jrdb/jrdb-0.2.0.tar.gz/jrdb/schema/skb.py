@@ -1,0 +1,31 @@
+schema = {
+    "name": "skb",
+    "type": "record",
+    "fields": [
+        {"start":   0, "end":   2, "type": "string", "name": "place_id"},
+        {"start":   2, "end":   4, "type": "string", "name": "year"},
+        {"start":   4, "end":   5, "type": "string", "name": "kai"},
+        {"start":   5, "end":   6, "type": "string", "name": "nichi"},
+        {"start":   6, "end":   8, "type": "string", "name": "number_of_race"},
+        {"start":   8, "end":  10, "type": "string", "name": "pp"},
+        {"start":  10, "end":  18, "type": "string", "name": "horse_id"},
+        {"start":  18, "end":  26, "type": "string", "name": "yyyymmdd"},
+        {"start":  26, "end":  44, "type": "string", "name": "ex_id"},
+        {"start":  44, "end":  68, "type": "string", "name": "harness_id"},
+        {"start":  68, "end":  77, "type": "string", "name": "foot_id"},
+        {"start":  77, "end":  86, "type": "string", "name": "foot_left_fore_id"},
+        {"start":  86, "end":  95, "type": "string", "name": "foot_right_fore_id"},
+        {"start":  95, "end": 104, "type": "string", "name": "foot_left_back_id"},
+        {"start": 104, "end": 113, "type": "string", "name": "foot_right_back_id"},
+        {"start": 113, "end": 153, "type": "string", "name": "paddock_comment"},
+        {"start": 153, "end": 193, "type": "string", "name": "foot_comment"},
+        {"start": 193, "end": 233, "type": "string", "name": "harness_comment"},
+        {"start": 233, "end": 273, "type": "string", "name": "race_comment"},
+        {"start": 273, "end": 276, "type": "string", "name": "bit_id"},
+        {"start": 276, "end": 279, "type": "string", "name": "vantage_id"},
+        {"start": 279, "end": 282, "type": "string", "name": "horseshoe_id"},
+        {"start": 282, "end": 285, "type": "string", "name": "hoof_status_id"},
+        {"start": 285, "end": 288, "type": "string", "name": "soe_id"},
+        {"start": 288, "end": 291, "type": "string", "name": "osselet_id"}
+    ]
+}
