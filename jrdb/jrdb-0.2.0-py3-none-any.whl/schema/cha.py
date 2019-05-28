@@ -1,0 +1,31 @@
+schema = {
+    "name": "cha",
+    "type": "record",
+    "fields": [
+        {"start":   0, "end":   2, "type": "string", "name": "place_id"},
+        {"start":   2, "end":   4, "type": "string", "name": "year"},
+        {"start":   4, "end":   5, "type": "string", "name": "kai"},
+        {"start":   5, "end":   6, "type": "string", "name": "nichi"},
+        {"start":   6, "end":   8, "type": "string", "name": "number_of_race"},
+        {"start":   8, "end":  10, "type": "string", "name": "pp"},
+        {"start":  10, "end":  12, "type": "string", "name": "day_of_week"},
+        {"start":  12, "end":  20, "type": "string", "name": "training_yyyymmdd"},
+        {"start":  20, "end":  21, "type": "string", "name": "number_of_traning"},
+        {"start":  21, "end":  23, "type": "string", "name": "course_id"},
+        {"start":  23, "end":  24, "type": "string", "name": "workout_type_id"},
+        {"start":  24, "end":  26, "type": "string", "name": "comment_id"},
+        {"start":  26, "end":  27, "type": "string", "name": "jockey_type_id"},
+        {"start":  27, "end":  28, "type": "string", "name": "training_furlong"},
+        {"start":  28, "end":  31, "type": "string", "name": "first_furlong"},
+        {"start":  31, "end":  34, "type": "string", "name": "middle_furlong"},
+        {"start":  34, "end":  37, "type": "string", "name": "last_furlong"},
+        {"start":  37, "end":  40, "type": "string", "name": "first_furlong_score"},
+        {"start":  40, "end":  43, "type": "string", "name": "middle_furlong_score"},
+        {"start":  43, "end":  46, "type": "string", "name": "last_furlong_score"},
+        {"start":  46, "end":  49, "type": "string", "name": "workout_score"},
+        {"start":  49, "end":  50, "type": "string", "name": "abreast_result_id"},
+        {"start":  50, "end":  51, "type": "string", "name": "abreast_workout_type_id"},
+        {"start":  51, "end":  53, "type": "string", "name": "abreast_age"},
+        {"start":  53, "end":  55, "type": "string", "name": "abreast_class_id"}
+    ]
+}
