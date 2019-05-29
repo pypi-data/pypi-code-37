@@ -1,0 +1,25 @@
+from distutils.core import setup
+setup(
+  name = 'fieldy',         
+  packages = ['fieldy'],   
+  version = '0.4.2',      
+  license='MIT',      
+  include_package_data=True,
+  description = 'Lib to help structure objects from jsons',   
+  author = 'arthurlpgc',                   
+  author_email = 'arthurlpgc@gmail.com',      
+  scripts = ['bin/fieldy'],
+  url = 'https://github.com/NeverDefineUs/fieldy',   
+  download_url = 'https://github.com/NeverDefineUs/fieldy/archive/0.4.2.tar.gz',    
+  keywords = ['SOME', 'MEANINGFULL', 'KEYWORDS'],   
+  classifiers=[
+    'Development Status :: 3 - Alpha',      
+    'Intended Audience :: Developers',      
+    'Topic :: Software Development :: Build Tools',
+    'License :: OSI Approved :: MIT License',   
+    'Programming Language :: Python :: 3',      
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+  ],
+)
