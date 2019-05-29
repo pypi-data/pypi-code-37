@@ -1,0 +1,158 @@
+from abc import abstractmethod
+from keras.layers import Input, Dense, PReLU, Lambda, Add
+from keras.models import Model
+import keras.backend as K
+from keras.optimizers import RMSprop, Adam
+import tensorflow as tf
+import tensorflow_probability as tfp
+tfd = tfp.distributions
+
+
+class LadderVAE:
+    def __init__(self, input_shape, latent_dim1, latent_dim2):
+        self.input_shape = input_shape
+        self.latent_dim1 = latent_dim1
+        self.latent_dim2 = latent_dim2
+        self.BATCH_SIZE = self.input_shape[0]
+
+    def encoder1(self):
+        input_tensor = Input(shape=self.input_shape[1:])
+        x = Dense(512)(input_tensor)
+        x = PReLU()(x)
+        x = Dense(256)(x)
+        x = PReLU()(x)
+        x = Dense(256)(x)
+        x = PReLU()(x)
+        encoder = Model(input_tensor, x)
+        return encoder
+
+    def encoder2(self):
+        input_tensor = Input(shape=(self.latent_dim1,))
+        x = Dense(256)(input_tensor)
+        x = PReLU()(x)
+        x = Dense(128)(x)
+        x = PReLU()(x)
+        x = Dense(128)(x)
+        x = PReLU()(x)
+        encoder = Model(input_tensor, x)
+        return encoder
+
+    def decoder2(self):
+        latent2 = Input(shape=(self.latent_dim2,))
+        x = Dense(128)(latent2)
+        x = PReLU()(x)
+        x = Dense(256)(x)
+        x = PReLU()(x)
+        x = Dense(512)(x)
+        x = PReLU()(x)
+        reco = Dense(self.latent_dim1)(x)
+        decoder = Model(latent2, reco)
+        return decoder
+
+    def decoder1(self):
+        latent1 = Input(shape=(self.latent_dim1,))
+        x = Dense(256)(latent1)
+        x = PReLU()(x)
+        x = Dense(512)(x)
+        x = PReLU()(x)
+        x = Dense(1024)(x)
+        x = PReLU()(x)
+        reco = Dense(self.input_shape[1])(x)
+        decoder = Model(latent1, reco)
+        return decoder
+
+    def _multiply(self, args):
+        z1_sigma, _z1_mean, _z1_sigma, d1_mean, d1_sigma = args
+        res = z1_sigma * (_z1_mean * _z1_sigma**(-2) + d1_mean * d1_sigma**(-2))
+        return res
+
+    def _split(self, _input):
+        return tf.split(axis=1, value=_input, num_or_size_splits=2)
+
+    def _sqr(self, _input):
+        return K.pow(_input, -2)
+
+    def _invert(self, _input):
+        return K.pow(_input, -1)
+
+    def _sample(self, args):
+        print("sample")
+        z_mean, z_sigma = args
+        dist = tfd.Normal(loc=z_mean, scale=z_sigma)
+        return dist.sample()
+
+    def _sampling(self, args):
+        z_mean, z_log_sigma = args
+        epsilon = K.random_normal(
+            shape=(self.BATCH_SIZE, self.latent_dim2), mean=0, stddev=1)
+        return z_mean + K.exp(z_log_sigma) * epsilon
+
+    def get_compiled_model(self, *args):
+        _, lr, decay, self.observation_noise, beta = args
+        input_img = Input(batch_shape=self.input_shape)
+
+        encoder1 = self.encoder1()
+        encoder2 = self.encoder2()
+        decoder1 = self.decoder1()
+        decoder2 = self.decoder2()
+
+        d1 = encoder1(input_img)
+
+        d2 = encoder2(d1)
+
+        # Reparametrization 1 & 2
+        self.z2_mean, self.z2_log_sigma = Dense(self.latent_dim2)(d2), Dense(self.latent_dim2)(d2)
+
+        self.mean, self.var = None, None
+        self.z2 = Lambda(self._sampling, name="latent2")(
+            [self.z2_mean, self.z2_log_sigma])
+
+        self.mean, self.var = tf.nn.moments(self.z2, axes=[0, 1])
+
+        self._z1 = decoder2(self.z2)
+
+        self._z1_mean, self._z1_sigma = Dense(self.latent_dim1)(
+            self._z1), Dense(self.latent_dim1)(self._z1)
+
+        self.d1_mean, self.d1_sigma = Dense(
+            self.latent_dim1)(d1), Dense(self.latent_dim1)(d1)
+
+        # Combine mean and sigma
+        self.z1_sigma = Lambda(self._invert)(
+            Add()([Lambda(self._sqr)(self._z1_sigma), Lambda(self._sqr)(self.d1_sigma)]))
+
+        self.z1_mean = Lambda(self._multiply)([self.z1_sigma, self._z1_mean, self._z1_sigma, self.d1_mean, self.d1_sigma])
+
+        self.z1 = Lambda(self._sample)([self.z1_mean, self.z1_sigma])
+
+        reco = decoder1(self.z1)
+
+        print("REco shape : ", reco.get_shape())
+
+        self.beta = beta
+
+        model = Model(input_img, reco)
+        model.compile(optimizer=RMSprop(lr=lr, decay=decay),
+                      loss=self.bernoulli, metrics=[self.KL_divergence])
+
+        # Generative model
+        latent_input = Input(shape=(self.latent_dim2,))
+        gen2 = decoder2(latent_input)
+        gen_reco = decoder1(gen2)
+        generative_model = Model(latent_input, gen_reco)
+
+        # Model for latent inference
+        z2 = self.z2
+        self.latent_model = Model(input_img, outputs=[reco, z2])
+
+        self.latent_dim = self.latent_dim2
+
+        return model, generative_model
+
+    def bernoulli(self, x_true, x_reco):
+        return -tf.reduce_mean(tfd.Bernoulli(x_reco)._log_prob(x_true)) \
+            + self.KL_divergence(None, None)
+
+    def KL_divergence(self, x, y):
+        return - self.beta * 0.5 * K.mean(
+            1 + self.z2_log_sigma - K.square(self.z2_mean) - K.exp(self.z2_log_sigma), axis=-1)
