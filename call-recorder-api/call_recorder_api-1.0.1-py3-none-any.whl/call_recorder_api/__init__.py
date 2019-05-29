@@ -1,0 +1,97 @@
+# coding: utf-8
+
+# flake8: noqa
+
+"""
+    Call Recorder API
+
+    Call Recorder API   # noqa: E501
+
+    OpenAPI spec version: 1.0.0
+    
+"""
+
+from __future__ import absolute_import
+
+# import apis into sdk package
+from call_recorder_api.api.default_api import DefaultApi
+# import ApiClient
+from call_recorder_api.api_client import ApiClient
+from call_recorder_api.configuration import Configuration
+# import models into sdk package
+from call_recorder_api.models.app import App
+from call_recorder_api.models.buy_credits_request import BuyCreditsRequest
+from call_recorder_api.models.buy_credits_response import BuyCreditsResponse
+from call_recorder_api.models.clone_file_request import CloneFileRequest
+from call_recorder_api.models.clone_file_response import CloneFileResponse
+from call_recorder_api.models.create_file_data import CreateFileData
+from call_recorder_api.models.create_file_request import CreateFileRequest
+from call_recorder_api.models.create_file_response import CreateFileResponse
+from call_recorder_api.models.create_folder_request import CreateFolderRequest
+from call_recorder_api.models.create_folder_response import CreateFolderResponse
+from call_recorder_api.models.delete_files_request import DeleteFilesRequest
+from call_recorder_api.models.delete_files_response import DeleteFilesResponse
+from call_recorder_api.models.delete_folder_request import DeleteFolderRequest
+from call_recorder_api.models.delete_folder_response import DeleteFolderResponse
+from call_recorder_api.models.delete_meta_files_request import DeleteMetaFilesRequest
+from call_recorder_api.models.delete_meta_files_response import DeleteMetaFilesResponse
+from call_recorder_api.models.device_type import DeviceType
+from call_recorder_api.models.files_permission import FilesPermission
+from call_recorder_api.models.get_files_request import GetFilesRequest
+from call_recorder_api.models.get_files_response import GetFilesResponse
+from call_recorder_api.models.get_files_response_files import GetFilesResponseFiles
+from call_recorder_api.models.get_folders_request import GetFoldersRequest
+from call_recorder_api.models.get_folders_response import GetFoldersResponse
+from call_recorder_api.models.get_folders_response_folders import GetFoldersResponseFolders
+from call_recorder_api.models.get_languages_request import GetLanguagesRequest
+from call_recorder_api.models.get_languages_response import GetLanguagesResponse
+from call_recorder_api.models.get_languages_response_languages import GetLanguagesResponseLanguages
+from call_recorder_api.models.get_messages_request import GetMessagesRequest
+from call_recorder_api.models.get_messages_response import GetMessagesResponse
+from call_recorder_api.models.get_messages_response_msgs import GetMessagesResponseMsgs
+from call_recorder_api.models.get_meta_files_request import GetMetaFilesRequest
+from call_recorder_api.models.get_meta_files_response import GetMetaFilesResponse
+from call_recorder_api.models.get_meta_files_response_meta_files import GetMetaFilesResponseMetaFiles
+from call_recorder_api.models.get_phones_request import GetPhonesRequest
+from call_recorder_api.models.get_phones_response import GetPhonesResponse
+from call_recorder_api.models.get_phones_response_inner import GetPhonesResponseInner
+from call_recorder_api.models.get_profile_request import GetProfileRequest
+from call_recorder_api.models.get_profile_response import GetProfileResponse
+from call_recorder_api.models.get_profile_response_profile import GetProfileResponseProfile
+from call_recorder_api.models.get_settings_request import GetSettingsRequest
+from call_recorder_api.models.get_settings_response import GetSettingsResponse
+from call_recorder_api.models.get_settings_response_settings import GetSettingsResponseSettings
+from call_recorder_api.models.get_translations_request import GetTranslationsRequest
+from call_recorder_api.models.get_translations_response import GetTranslationsResponse
+from call_recorder_api.models.notify_user_request import NotifyUserRequest
+from call_recorder_api.models.notify_user_response import NotifyUserResponse
+from call_recorder_api.models.play_beep import PlayBeep
+from call_recorder_api.models.recover_file_request import RecoverFileRequest
+from call_recorder_api.models.recover_file_response import RecoverFileResponse
+from call_recorder_api.models.register_phone_request import RegisterPhoneRequest
+from call_recorder_api.models.register_phone_response import RegisterPhoneResponse
+from call_recorder_api.models.update_device_token_request import UpdateDeviceTokenRequest
+from call_recorder_api.models.update_device_token_response import UpdateDeviceTokenResponse
+from call_recorder_api.models.update_file_request import UpdateFileRequest
+from call_recorder_api.models.update_file_response import UpdateFileResponse
+from call_recorder_api.models.update_folder_request import UpdateFolderRequest
+from call_recorder_api.models.update_folder_response import UpdateFolderResponse
+from call_recorder_api.models.update_order_request import UpdateOrderRequest
+from call_recorder_api.models.update_order_response import UpdateOrderResponse
+from call_recorder_api.models.update_profile_img_request import UpdateProfileImgRequest
+from call_recorder_api.models.update_profile_img_response import UpdateProfileImgResponse
+from call_recorder_api.models.update_profile_request import UpdateProfileRequest
+from call_recorder_api.models.update_profile_request_data import UpdateProfileRequestData
+from call_recorder_api.models.update_profile_response import UpdateProfileResponse
+from call_recorder_api.models.update_settings_request import UpdateSettingsRequest
+from call_recorder_api.models.update_settings_response import UpdateSettingsResponse
+from call_recorder_api.models.update_star_request import UpdateStarRequest
+from call_recorder_api.models.update_star_response import UpdateStarResponse
+from call_recorder_api.models.update_user_request import UpdateUserRequest
+from call_recorder_api.models.update_user_response import UpdateUserResponse
+from call_recorder_api.models.upload_meta_file_request import UploadMetaFileRequest
+from call_recorder_api.models.upload_meta_file_response import UploadMetaFileResponse
+from call_recorder_api.models.verify_folder_pass_request import VerifyFolderPassRequest
+from call_recorder_api.models.verify_folder_pass_response import VerifyFolderPassResponse
+from call_recorder_api.models.verify_phone_request import VerifyPhoneRequest
+from call_recorder_api.models.verify_phone_response import VerifyPhoneResponse
