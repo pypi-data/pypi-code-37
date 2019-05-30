@@ -1,0 +1,2 @@
+from allencv.models.object_detection.region_proposal_network import RPN, PretrainedDetectronRPN
+from allencv.models.object_detection.faster_rcnn import FasterRCNN, PretrainedDetectronFasterRCNN
