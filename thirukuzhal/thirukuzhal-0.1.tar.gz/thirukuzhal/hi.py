@@ -1,0 +1,2 @@
+def hai():
+	print("hello")
