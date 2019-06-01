@@ -1,0 +1,35 @@
+import setuptools
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+classifiers = [
+    'Topic :: Desktop Environment :: Gnome',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'License :: OSI Approved :: MIT License',
+    'Topic :: Utilities']
+
+setuptools.setup(
+    name="codethemes",
+    version="0.1.0",
+    python_requires='>=3.*',
+    author="saberd",
+    author_email="mail@saberd.com",
+    description="Import visual studio themes as linux terminal theme profiles",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/saberd/codethemes",
+    packages=setuptools.find_packages(),
+    py_modules=['codethemes'],
+    install_requires=[
+        "pyjson5",
+        "dconfjson",
+    ],
+    classifiers=classifiers,
+    entry_points={
+        'console_scripts': [
+            'codethemes=codethemes.main:importer',
+        ],
+    },
+)
