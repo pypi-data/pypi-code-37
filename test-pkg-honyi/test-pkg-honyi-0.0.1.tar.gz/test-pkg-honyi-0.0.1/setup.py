@@ -1,0 +1,22 @@
+import setuptools
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+    name="test-pkg-honyi",
+    version="0.0.1",
+    author="honyi",
+    author_email="18201245243@163.com",
+    description="A test package",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/supeanut/test_package",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+)
+
