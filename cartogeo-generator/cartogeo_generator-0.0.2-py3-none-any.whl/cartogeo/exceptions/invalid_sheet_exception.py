@@ -1,0 +1,2 @@
+class InvalidSheetException(Exception):
+    pass
