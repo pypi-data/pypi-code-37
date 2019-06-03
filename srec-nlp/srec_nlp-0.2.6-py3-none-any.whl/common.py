@@ -1,0 +1,125 @@
+import functools
+import itertools
+from io import IOBase
+from pathlib import Path
+from typing import List, Dict, Callable, Union
+import copy
+import attr
+import asyncio
+import trio
+from requests import HTTPError
+from trio import MultiError
+
+
+@attr.s(frozen=True)
+class Score:
+    positive: float = attr.ib(factory=float)
+    negative: float = attr.ib(factory=float)
+    classification: str = ""
+
+    def __attrs_post_init__(self):
+        classes = ("positive", "negative")
+        filt = [getattr(self, c) for c in classes]
+        mx = max(filt)
+        object.__setattr__(
+            self,
+            "classification",
+            next(itertools.compress(classes, map(mx.__eq__, filt))),
+        )
+
+    @classmethod
+    def fromsingle(cls, value):
+        """
+        :param value: single value score
+        :return:
+        """
+        negative = 1 - value
+        positive = value
+
+        return Score(positive=positive, negative=negative)
+
+    @classmethod
+    def fromtriplet(cls, positive, neutral, negative):
+        """
+        :param positive:  Confidence
+        :param neutral: Confidence
+        :param negative: Confidence
+        :return: Score
+        """
+        positive += neutral / 2
+        negative += neutral / 2
+        return Score(positive=positive, negative=negative)
+
+
+@attr.s(frozen=True)
+class Query:
+    content: str = attr.ib(factory=str)
+    score: Score = attr.ib(default=Score())
+
+
+def _ensure_utf(
+        func: Callable[[str], Query]
+) -> Callable[[Union[IOBase, str, Path, bytes]], Query]:
+    """
+
+    :param func: Query function to wrap
+    :return: Returns a wrapper for the provided function.
+    """
+
+    @functools.singledispatch
+    def _text_is_utf(text: str):
+        return text.replace("\n", "")
+
+    @_text_is_utf.register(bytes)
+    def _(text: bytes):
+        return text.decode("utf-8").replace("\n", "")
+
+    @_text_is_utf.register(Path)
+    def _(path: Path):
+        text = path.read_text("utf-8").replace("\n", "")
+        return text
+
+    @_text_is_utf.register(IOBase)
+    def _(fp: IOBase):
+        text = "".join(map(str, fp.readlines())).replace("\n", "")
+        return text
+
+    @functools.wraps(func)
+    def wrapper(self, text):
+        text = _text_is_utf(text).replace("\n", "")
+        return func(self, text)
+
+    return wrapper
+
+
+def _parallel(func):
+    async def listd(self, query):
+        def catch_httperr(exc):
+            if isinstance(exc, HTTPError):
+                print(exc)
+                raise HTTPError()
+            else:
+                raise MultiError([exc])
+
+        async def list_internal(s, q, callback):
+            callback(func(s, q))
+
+        results = []
+        with trio.MultiError.catch(catch_httperr):
+            async with trio.open_nursery() as nursery:
+                for q in query:
+                    nursery.start_soon(list_internal, self, q, results.append)
+
+        return results
+
+    @functools.wraps(func)
+    def internal(self, query):
+        if isinstance(query, list):
+            try:
+                return trio.run(listd, self, query)
+            except trio.MultiError as err:
+                exceptions = err.exceptions()
+
+        return func(self, query)
+
+    return internal
